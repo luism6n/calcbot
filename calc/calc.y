@@ -3,7 +3,7 @@
 %}
 
 %union{
-    val int
+    val float64
 }
 
 %token NUMBER
