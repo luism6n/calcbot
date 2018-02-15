@@ -4,8 +4,8 @@ package calc
 import (
 	"fmt"
 	"log"
+	"regexp"
 	"strconv"
-	"unicode"
 	"unicode/utf8"
 )
 
@@ -37,11 +37,9 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 }
 
 func (l *calcLexer) nextToken() {
-	l.ts = l.te
-	c := l.nextRune()
-	for !l.eof() && c != ' ' && unicode.IsDigit(c) {
-		c = l.nextRune()
-	}
+	re := regexp.MustCompile(`[0-9]+(\.[0-9]*)?`)
+	loc := re.FindStringIndex(l.program[l.te:])
+	l.ts, l.te = loc[0], loc[1]
 }
 
 func (l *calcLexer) eof() bool {

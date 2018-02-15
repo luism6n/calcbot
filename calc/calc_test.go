@@ -14,6 +14,7 @@ func TestLexer(t *testing.T) {
 			{"2", 2.0},
 			{"999", 999.0},
 			{"100001", 100001.0},
+			{"1.5", 1.5},
 		}
 
 		for _, c := range testCases {
