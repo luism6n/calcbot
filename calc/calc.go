@@ -37,7 +37,13 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 }
 
 func (l *calcLexer) nextToken() {
-	re := regexp.MustCompile(`[0-9]+(\.[0-9]*)?`)
+	// This scary-looking regex was taken from
+	// https://golang.org/ref/spec#Floating-point_literals
+	// with the added option to have no decimal point. Funny enough, putting the
+	// [0-9]+ at the beginning fails to match 1.5, for example.
+	// TODO: find documentation about in what order Go tries to match the ORed
+	// regexes.
+	re := regexp.MustCompile(`[0-9]+\.([0-9]+)?([eE][+-]?[0-9]+)?|[0-9]+([eE][+-]?[0-9]+)|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+`)
 	loc := re.FindStringIndex(l.program[l.te:])
 	l.ts, l.te = loc[0], loc[1]
 }
