@@ -43,6 +43,27 @@ func TestLexer(t *testing.T) {
 			}
 		}
 	})
+
+	t.Run("Should recognize identifiers", func(t *testing.T) {
+		testCases := []string{
+			"a",
+			"aa",
+			"a_b",
+			"AB",
+			"a1",
+			"a",
+		}
+
+		for _, c := range testCases {
+			lexer := newCalcLexer(c)
+			lval := &yySymType{}
+			token := lexer.Lex(lval)
+
+			if token != IDENTIFIER || lval.name != c {
+				t.Fatalf("%d != %d or  %q != %q", token, IDENTIFIER, lval.name, c)
+			}
+		}
+	})
 }
 
 func floatEquals(a, b, eps float64) bool {

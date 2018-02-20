@@ -6,6 +6,7 @@ import (
 	"log"
 	"regexp"
 	"strconv"
+	"unicode"
 	"unicode/utf8"
 )
 
@@ -26,30 +27,48 @@ func newCalcLexer(program string) *calcLexer {
 
 // Lex returns the next token type and puts its value (if any) in lval.
 func (l *calcLexer) Lex(lval *yySymType) int {
-	l.nextToken()
-
-	var err error
-	lval.val, err = strconv.ParseFloat(l.currentToken(), 64)
-	if err != nil {
-		l.Error(fmt.Sprintf("ParseFloat(%s, 64) failed: %s", l.currentToken(), err.Error()))
+	if l.eof() {
+		return 0
 	}
-	return NUMBER
-}
 
-func (l *calcLexer) nextToken() {
-	// This scary-looking regex was taken from
-	// https://golang.org/ref/spec#Floating-point_literals
-	// with the added option to have no decimal point. Funny enough, putting the
-	// [0-9]+ at the beginning fails to match 1.5, for example.
-	// TODO: find documentation about in what order Go tries to match the ORed
-	// regexes.
-	re := regexp.MustCompile(`[0-9]+\.([0-9]+)?([eE][+-]?[0-9]+)?|[0-9]+([eE][+-]?[0-9]+)|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+`)
-	loc := re.FindStringIndex(l.program[l.te:])
-	l.ts, l.te = loc[0], loc[1]
+	c := l.peekRune()
+
+	var tokenType int
+	var loc []int
+	if unicode.IsLetter(c) {
+		re := regexp.MustCompile(`[a-zA-Z][_a-zA-Z0-9]*`)
+		loc = re.FindStringIndex(l.program[l.te:])
+		l.ts, l.te = loc[0], loc[1]
+		tokenType = IDENTIFIER
+		lval.name = l.currentToken()
+	} else {
+		// This scary-looking regex was taken from
+		// https://golang.org/ref/spec#Floating-point_literals
+		// with the added option to have no decimal point. Funny enough, putting the
+		// [0-9]+ at the beginning fails to match 1.5, for example.
+		// TODO: find documentation about in what order Go tries to match the ORed
+		// regexes.
+		re := regexp.MustCompile(`[0-9]+\.([0-9]+)?([eE][+-]?[0-9]+)?|[0-9]+([eE][+-]?[0-9]+)|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+`)
+		loc = re.FindStringIndex(l.program[l.te:])
+		l.ts, l.te = loc[0], loc[1]
+		tokenType = NUMBER
+		var err error
+		lval.val, err = strconv.ParseFloat(l.currentToken(), 64)
+		if err != nil {
+			l.Error(fmt.Sprintf("ParseFloat(%s, 64) failed: %s", l.currentToken(), err.Error()))
+		}
+	}
+
+	return tokenType
 }
 
 func (l *calcLexer) eof() bool {
 	return l.ts == len(l.program)
+}
+
+func (l *calcLexer) peekRune() rune {
+	c, _ := utf8.DecodeRuneInString(l.program[l.te:])
+	return c
 }
 
 func (l *calcLexer) nextRune() rune {

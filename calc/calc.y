@@ -4,12 +4,16 @@
 
 %union{
     val float64
+    name string
 }
 
 %token NUMBER
+%token IDENTIFIER
 
 %%
 
-expr : NUMBER ;
+expr : NUMBER
+     | IDENTIFIER
+     ;
 
 %%
