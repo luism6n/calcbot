@@ -45,21 +45,30 @@ func TestLexer(t *testing.T) {
 	})
 
 	t.Run("Should recognize identifiers", func(t *testing.T) {
-		testCases := []string{
-			"a",
-			"aa",
-			"a_b",
-			"AB",
-			"a1",
-			"a",
+		testCases := []struct {
+			Input string
+			Value string
+		}{
+			{"a", "a"},
+			{"aa", "aa"},
+			{"a_b", "a_b"},
+			{"AB", "AB"},
+			{"a1", "a1"},
+			{"a", "a"},
+			{" a", "a"},
+			{"a ", "a"},
+			{"\ta", "a"},
+			{"a\t", "a"},
+			{"\na", "a"},
+			{"a\n", "a"},
 		}
 
 		for _, c := range testCases {
-			lexer := newCalcLexer(c)
+			lexer := newCalcLexer(c.Input)
 			lval := &yySymType{}
 			token := lexer.Lex(lval)
 
-			if token != IDENTIFIER || lval.name != c {
+			if token != IDENTIFIER || lval.name != c.Value {
 				t.Fatalf("%d != %d or  %q != %q", token, IDENTIFIER, lval.name, c)
 			}
 		}

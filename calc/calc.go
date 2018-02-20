@@ -32,13 +32,17 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 	}
 
 	c := l.peekRune()
+	for unicode.IsSpace(c) {
+		l.nextRune()
+		c = l.peekRune()
+	}
 
 	var tokenType int
 	var loc []int
 	if unicode.IsLetter(c) {
 		re := regexp.MustCompile(`[a-zA-Z][_a-zA-Z0-9]*`)
 		loc = re.FindStringIndex(l.program[l.te:])
-		l.ts, l.te = loc[0], loc[1]
+		l.ts, l.te = l.te+loc[0], l.te+loc[1]
 		tokenType = IDENTIFIER
 		lval.name = l.currentToken()
 	} else {
@@ -50,7 +54,7 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 		// regexes.
 		re := regexp.MustCompile(`[0-9]+\.([0-9]+)?([eE][+-]?[0-9]+)?|[0-9]+([eE][+-]?[0-9]+)|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+`)
 		loc = re.FindStringIndex(l.program[l.te:])
-		l.ts, l.te = loc[0], loc[1]
+		l.ts, l.te = l.te+loc[0], l.te+loc[1]
 		tokenType = NUMBER
 		var err error
 		lval.val, err = strconv.ParseFloat(l.currentToken(), 64)
