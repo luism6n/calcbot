@@ -6,6 +6,7 @@ import (
 	"log"
 	"regexp"
 	"strconv"
+	"strings"
 	"unicode"
 	"unicode/utf8"
 )
@@ -39,7 +40,16 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 
 	var tokenType int
 	var loc []int
-	if unicode.IsLetter(c) {
+	if strings.HasPrefix(l.program[l.te:], "log") {
+		l.ts, l.te = l.te, l.te+3
+		tokenType = LOG
+	} else if strings.HasPrefix(l.program[l.te:], "pow") {
+		l.ts, l.te = l.te, l.te+3
+		tokenType = POW
+	} else if strings.ContainsAny(l.program[l.te:l.te+1], "+-/*") {
+		l.ts, l.te = l.te, l.te+1
+		tokenType = int(l.currentToken()[0])
+	} else if unicode.IsLetter(c) {
 		re := regexp.MustCompile(`[a-zA-Z][_a-zA-Z0-9]*`)
 		loc = re.FindStringIndex(l.program[l.te:])
 		l.ts, l.te = l.te+loc[0], l.te+loc[1]

@@ -73,6 +73,30 @@ func TestLexer(t *testing.T) {
 			}
 		}
 	})
+
+	t.Run("Should recognize operations and parenthesis", func(t *testing.T) {
+		testCases := []struct {
+			Input     string
+			TokenType int
+		}{
+			{"+", '+'},
+			{"-", '-'},
+			{"*", '*'},
+			{"/", '/'},
+			{"log", LOG},
+			{"pow", POW},
+		}
+
+		for _, c := range testCases {
+			lexer := newCalcLexer(c.Input)
+			lval := &yySymType{}
+			token := lexer.Lex(lval)
+
+			if token != c.TokenType {
+				t.Fatalf("%s != %s for %s", tokname(token), tokname(c.TokenType), c.Input)
+			}
+		}
+	})
 }
 
 func tokname(token int) string {
