@@ -100,6 +100,31 @@ func TestLexer(t *testing.T) {
 			}
 		}
 	})
+
+	t.Run("Should recognize streams of tokens", func(t *testing.T) {
+		testCases := []struct {
+			Input       string
+			TokenStream []int
+		}{
+			{"a + 1", []int{IDENTIFIER, '+', NUMBER}},
+			{"log(10, 2)", []int{LOG, '(', NUMBER, ',', NUMBER, ')'}},
+			{"pow(10, 2)", []int{POW, '(', NUMBER, ',', NUMBER, ')'}},
+			{"pow(log(10, 2), 2)", []int{POW, '(', LOG, '(', NUMBER, ',', NUMBER, ')', ',', NUMBER, ')'}},
+			{"pow(abcde, 2)", []int{POW, '(', IDENTIFIER, ',', NUMBER, ')'}},
+		}
+
+		for _, c := range testCases {
+			lexer := newCalcLexer(c.Input)
+			lval := &yySymType{}
+
+			for i, expected := range c.TokenStream {
+				actual := lexer.Lex(lval)
+				if actual != expected {
+					t.Fatalf("%s != %s for token number %d in %v", tokname(actual), tokname(expected), i+1, c.Input)
+				}
+			}
+		}
+	})
 }
 
 func tokname(token int) string {
