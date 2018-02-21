@@ -85,6 +85,8 @@ func TestLexer(t *testing.T) {
 			{"/", '/'},
 			{"log", LOG},
 			{"pow", POW},
+			{"(", '('},
+			{")", ')'},
 		}
 
 		for _, c := range testCases {
