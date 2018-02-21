@@ -88,6 +88,8 @@ func TestLexer(t *testing.T) {
 			{"(", '('},
 			{")", ')'},
 			{",", ','},
+			{"=", '='},
+			{";", ';'},
 		}
 
 		for _, c := range testCases {
@@ -111,6 +113,7 @@ func TestLexer(t *testing.T) {
 			{"pow(10, 2)", []int{POW, '(', NUMBER, ',', NUMBER, ')'}},
 			{"pow(log(10, 2), 2)", []int{POW, '(', LOG, '(', NUMBER, ',', NUMBER, ')', ',', NUMBER, ')'}},
 			{"pow(abcde, 2)", []int{POW, '(', IDENTIFIER, ',', NUMBER, ')'}},
+			{"a= 2 ; a+1", []int{IDENTIFIER, '=', NUMBER, ';', IDENTIFIER, '+', NUMBER}},
 		}
 
 		for _, c := range testCases {
