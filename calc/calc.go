@@ -35,10 +35,12 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 	l.consumeWhiteSpace()
 	c := l.peekRune()
 
+	reLog := regexp.MustCompile(`log`)
+
 	var tokenType int
 	var loc []int
-	if strings.HasPrefix(l.program[l.te:], "log") {
-		l.ts, l.te = l.te, l.te+3
+	if loc = reLog.FindStringIndex(l.program[l.te:]); loc != nil {
+		l.ts, l.te = l.te+loc[0], l.te+loc[1]
 		tokenType = LOG
 	} else if strings.HasPrefix(l.program[l.te:], "pow") {
 		l.ts, l.te = l.te, l.te+3
