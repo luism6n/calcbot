@@ -32,11 +32,8 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 		return 0
 	}
 
+	l.consumeWhiteSpace()
 	c := l.peekRune()
-	for unicode.IsSpace(c) {
-		l.nextRune()
-		c = l.peekRune()
-	}
 
 	var tokenType int
 	var loc []int
@@ -78,6 +75,14 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 
 func (l *calcLexer) eof() bool {
 	return l.ts == len(l.program)
+}
+
+func (l *calcLexer) consumeWhiteSpace() {
+	c := l.peekRune()
+	for unicode.IsSpace(c) {
+		l.nextRune()
+		c = l.peekRune()
+	}
 }
 
 func (l *calcLexer) peekRune() rune {
