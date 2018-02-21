@@ -57,11 +57,7 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 		lval.name = l.currentToken()
 		return IDENTIFIER
 	case l.matchAndAdvance(reNumber):
-		var err error
-		lval.val, err = strconv.ParseFloat(l.currentToken(), 64)
-		if err != nil {
-			l.Error(fmt.Sprintf("ParseFloat(%s, 64) failed: %s", l.currentToken(), err.Error()))
-		}
+		lval.val = l.parseFloat()
 		return NUMBER
 	default:
 		l.Error(fmt.Sprintf("Error parsing expression: %s", l.program[l.te:]))
@@ -104,6 +100,14 @@ func (l *calcLexer) matchAndAdvance(re *regexp.Regexp) bool {
 	}
 
 	return false
+}
+
+func (l *calcLexer) parseFloat() float64 {
+	val, err := strconv.ParseFloat(l.currentToken(), 64)
+	if err != nil {
+		l.Error(fmt.Sprintf("ParseFloat(%s, 64) failed: %s", l.currentToken(), err.Error()))
+	}
+	return val
 }
 
 func (l *calcLexer) currentToken() string {
