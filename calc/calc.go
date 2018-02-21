@@ -46,32 +46,27 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 	// regexes.
 	reNumber := regexp.MustCompile(`[0-9]+\.([0-9]+)?([eE][+-]?[0-9]+)?|[0-9]+([eE][+-]?[0-9]+)|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+`)
 
-	var tokenType int
-	var loc []int
-	if loc = reLog.FindStringIndex(l.program[l.te:]); loc != nil && loc[0] == 0 {
-		l.ts, l.te = l.te+loc[0], l.te+loc[1]
-		tokenType = LOG
-	} else if loc = rePow.FindStringIndex(l.program[l.te:]); loc != nil && loc[0] == 0 {
-		l.ts, l.te = l.te+loc[0], l.te+loc[1]
-		tokenType = POW
-	} else if loc = reOp.FindStringIndex(l.program[l.te:]); loc != nil && loc[0] == 0 {
-		l.ts, l.te = l.te+loc[0], l.te+loc[1]
-		tokenType = int(l.currentToken()[0])
-	} else if loc = reIdent.FindStringIndex(l.program[l.te:]); loc != nil && loc[0] == 0 {
-		l.ts, l.te = l.te+loc[0], l.te+loc[1]
-		tokenType = IDENTIFIER
+	switch {
+	case l.matchAndAdvance(reLog):
+		return LOG
+	case l.matchAndAdvance(rePow):
+		return POW
+	case l.matchAndAdvance(reOp):
+		return int(l.currentToken()[0])
+	case l.matchAndAdvance(reIdent):
 		lval.name = l.currentToken()
-	} else if loc = reNumber.FindStringIndex(l.program[l.te:]); loc != nil && loc[0] == 0 {
-		l.ts, l.te = l.te+loc[0], l.te+loc[1]
-		tokenType = NUMBER
+		return IDENTIFIER
+	case l.matchAndAdvance(reNumber):
 		var err error
 		lval.val, err = strconv.ParseFloat(l.currentToken(), 64)
 		if err != nil {
 			l.Error(fmt.Sprintf("ParseFloat(%s, 64) failed: %s", l.currentToken(), err.Error()))
 		}
+		return NUMBER
+	default:
+		l.Error(fmt.Sprintf("Error parsing expression: %s", l.program[l.te:]))
+		return -1
 	}
-
-	return tokenType
 }
 
 func (l *calcLexer) eof() bool {
@@ -96,6 +91,19 @@ func (l *calcLexer) nextRune() rune {
 	l.te += width
 
 	return c
+}
+
+// matchAndAdvance will check if the beginning of the remainder of the program
+// l.program matches the regular expression re. If it does, l.te is advanced by
+// the size of the match and true is returned. Else, nothing happens and false
+// is returned.
+func (l *calcLexer) matchAndAdvance(re *regexp.Regexp) bool {
+	if loc := re.FindStringIndex(l.program[l.te:]); loc != nil && loc[0] == 0 {
+		l.ts, l.te = l.te, l.te+loc[1]
+		return true
+	}
+
+	return false
 }
 
 func (l *calcLexer) currentToken() string {
