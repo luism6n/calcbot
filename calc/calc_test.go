@@ -101,7 +101,12 @@ func TestLexer(t *testing.T) {
 
 func tokname(token int) string {
 	// This is probably a bad idea
-	return yyToknames[token-NUMBER+3]
+	index := token - NUMBER + 3
+	if index >= 0 && index < len(yyToknames) {
+		return yyToknames[index]
+	}
+
+	return string([]byte{byte(token)})
 }
 
 func floatEquals(a, b, eps float64) bool {
