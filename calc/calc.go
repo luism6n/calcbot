@@ -38,6 +38,14 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 	reOp := regexp.MustCompile(`[+/*-]`)
 	reIdent := regexp.MustCompile(`[a-zA-Z][_a-zA-Z0-9]*`)
 
+	// This scary-looking regex was taken from
+	// https://golang.org/ref/spec#Floating-point_literals
+	// with the added option to have no decimal point. Funny enough, putting the
+	// [0-9]+ at the beginning fails to match 1.5, for example.
+	// TODO: find documentation about in what order Go tries to match the ORed
+	// regexes.
+	reNumber := regexp.MustCompile(`[0-9]+\.([0-9]+)?([eE][+-]?[0-9]+)?|[0-9]+([eE][+-]?[0-9]+)|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+`)
+
 	var tokenType int
 	var loc []int
 	if loc = reLog.FindStringIndex(l.program[l.te:]); loc != nil && loc[0] == 0 {
@@ -53,15 +61,7 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 		l.ts, l.te = l.te+loc[0], l.te+loc[1]
 		tokenType = IDENTIFIER
 		lval.name = l.currentToken()
-	} else {
-		// This scary-looking regex was taken from
-		// https://golang.org/ref/spec#Floating-point_literals
-		// with the added option to have no decimal point. Funny enough, putting the
-		// [0-9]+ at the beginning fails to match 1.5, for example.
-		// TODO: find documentation about in what order Go tries to match the ORed
-		// regexes.
-		re := regexp.MustCompile(`[0-9]+\.([0-9]+)?([eE][+-]?[0-9]+)?|[0-9]+([eE][+-]?[0-9]+)|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+`)
-		loc = re.FindStringIndex(l.program[l.te:])
+	} else if loc = reNumber.FindStringIndex(l.program[l.te:]); loc != nil && loc[0] == 0 {
 		l.ts, l.te = l.te+loc[0], l.te+loc[1]
 		tokenType = NUMBER
 		var err error
