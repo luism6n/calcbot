@@ -35,7 +35,7 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 
 	reLog := regexp.MustCompile(`log`)
 	rePow := regexp.MustCompile(`pow`)
-	reOp := regexp.MustCompile(`[()+/*-]`)
+	reOp := regexp.MustCompile(`[,()+/*-]`)
 	reIdent := regexp.MustCompile(`[a-zA-Z][_a-zA-Z0-9]*`)
 
 	// This scary-looking regex was taken from
