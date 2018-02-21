@@ -39,7 +39,7 @@ func TestLexer(t *testing.T) {
 			token := lexer.Lex(lval)
 
 			if token != NUMBER || !floatEquals(lval.val, c.Value, 0.000001) {
-				t.Fatalf("%d != %d or  %f != %f", token, NUMBER, lval.val, c.Value)
+				t.Fatalf("%s != %s or  %f != %f", tokname(token), tokname(NUMBER), lval.val, c.Value)
 			}
 		}
 	})
@@ -69,10 +69,15 @@ func TestLexer(t *testing.T) {
 			token := lexer.Lex(lval)
 
 			if token != IDENTIFIER || lval.name != c.Value {
-				t.Fatalf("%d != %d or  %q != %q", token, IDENTIFIER, lval.name, c)
+				t.Fatalf("%s != %s or  %q != %q", tokname(token), tokname(IDENTIFIER), lval.name, c)
 			}
 		}
 	})
+}
+
+func tokname(token int) string {
+	// This is probably a bad idea
+	return yyToknames[token-NUMBER+3]
 }
 
 func floatEquals(a, b, eps float64) bool {
