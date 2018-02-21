@@ -20,8 +20,8 @@ type calcLexer struct {
 func newCalcLexer(program string) *calcLexer {
 	return &calcLexer{
 		program: program,
-		ts:      -1,
-		te:      0,
+		ts:      -1, // current token's start
+		te:      0,  // and end positions
 	}
 }
 
