@@ -18,6 +18,7 @@ func TestInterpreter(t *testing.T) {
 			{"2 / 2", 1.0},
 			{"2 * 3 + 1", 7.0},
 			{"1 + 2 * 3", 7.0},
+			{"(1 + 2)*3", 9.0},
 		}
 
 		for _, c := range testCases {
