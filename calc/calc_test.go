@@ -72,7 +72,7 @@ func TestLexer(t *testing.T) {
 			token := lexer.Lex(lval)
 
 			if token != IDENTIFIER || lval.name != c.Value {
-				t.Fatalf("%s != %s or  %q != %q", tokname(token), tokname(IDENTIFIER), lval.name, c)
+				t.Fatalf("%s != %s or  %q != %q", tokname(token), tokname(IDENTIFIER), lval.name, c.Value)
 			}
 		}
 	})
