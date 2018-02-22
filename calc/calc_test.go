@@ -61,6 +61,9 @@ func TestLexer(t *testing.T) {
 			{"a\t", "a"},
 			{"\na", "a"},
 			{"a\n", "a"},
+			{"á", "á"},
+			{"maçã", "maçã"},
+			{"τὰφυσικά", "τὰφυσικά"},
 		}
 
 		for _, c := range testCases {

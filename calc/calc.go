@@ -36,7 +36,7 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 	reLog := regexp.MustCompile(`log`)
 	rePow := regexp.MustCompile(`pow`)
 	reOp := regexp.MustCompile(`[;=,()+/*-]`)
-	reIdent := regexp.MustCompile(`[a-zA-Z][_a-zA-Z0-9]*`)
+	reIdent := regexp.MustCompile(`\pL(\pL|[0-9_])*`)
 
 	// This scary-looking regex was taken from
 	// https://golang.org/ref/spec#Floating-point_literals
