@@ -4,6 +4,24 @@ import (
 	"testing"
 )
 
+func TestInterpreter(t *testing.T) {
+	t.Run("Should evaluate numbers to their values", func(t *testing.T) {
+		testCases := []struct {
+			Input string
+			Value float64
+		}{
+			{"1", 1.0},
+		}
+
+		for _, c := range testCases {
+			result, err := Evaluate(c.Input)
+			if err != nil || result != c.Value {
+				t.Fatalf("%f != %f or error (%s) not nil in test case %+v", result, c.Value, err, c)
+			}
+		}
+	})
+}
+
 func TestLexer(t *testing.T) {
 	t.Run("Should recognize numbers", func(t *testing.T) {
 		testCases := []struct {

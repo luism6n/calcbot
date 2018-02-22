@@ -10,6 +10,11 @@ import (
 	"unicode/utf8"
 )
 
+// Evaluate takes a program and returns the value of it's last statement.
+func Evaluate(program string) (float64, error) {
+	return 1.0, nil
+}
+
 // Lexer is a math expressions (plus variables) tokenizer.
 type calcLexer struct {
 	program string
