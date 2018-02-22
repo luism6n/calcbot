@@ -2,6 +2,7 @@
 package calc
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"regexp"
@@ -10,9 +11,15 @@ import (
 	"unicode/utf8"
 )
 
+var result float64 // yyParse stores the end result here
+
 // Evaluate takes a program and returns the value of it's last statement.
 func Evaluate(program string) (float64, error) {
-	return 1.0, nil
+	if yyParse(newCalcLexer(program)) != 0 {
+		return 0.0, errors.New("Failed to parse program")
+	}
+
+	return result, nil
 }
 
 // Lexer is a math expressions (plus variables) tokenizer.
@@ -32,11 +39,11 @@ func newCalcLexer(program string) *calcLexer {
 
 // Lex returns the next token type and puts its value (if any) in lval.
 func (l *calcLexer) Lex(lval *yySymType) int {
+	l.consumeWhiteSpace()
+
 	if l.eof() {
 		return 0
 	}
-
-	l.consumeWhiteSpace()
 
 	reLog := regexp.MustCompile(`log`)
 	rePow := regexp.MustCompile(`pow`)
@@ -71,7 +78,7 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 }
 
 func (l *calcLexer) eof() bool {
-	return l.ts == len(l.program)
+	return l.te == len(l.program)
 }
 
 func (l *calcLexer) consumeWhiteSpace() {
@@ -121,5 +128,5 @@ func (l *calcLexer) currentToken() string {
 
 // Error is called when something is wrong in the Lexer's program.
 func (l *calcLexer) Error(s string) {
-	log.Fatalf("Syntax error: %s", s)
+	log.Printf("Syntax error: %s\n", s)
 }

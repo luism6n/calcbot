@@ -1,5 +1,5 @@
 %{
-    package calc
+package calc
 %}
 
 %union{
@@ -7,14 +7,19 @@
     name string
 }
 
-%token NUMBER
-%token IDENTIFIER
+%type <val> expr
+
+%token <val> NUMBER
+%token <val> IDENTIFIER
 %token LOG
 %token POW
 
 %%
 
-expr : NUMBER
+prog : expr { result = $1 }
+     | prog ';' expr { result = $3 }
+
+expr : NUMBER { $$ = $1 }
      | IDENTIFIER
      ;
 
