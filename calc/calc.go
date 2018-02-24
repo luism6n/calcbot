@@ -15,11 +15,12 @@ var result float64 // yyParse stores the end result here
 
 // Evaluate takes a program and returns the value of it's last statement.
 func Evaluate(program string) (float64, error) {
-	if yyParse(newCalcLexer(program)) != 0 {
+	lexer := newCalcLexer(program)
+	if yyParse(lexer) != 0 {
 		return 0.0, errors.New("Failed to parse program")
 	}
 
-	return result, nil
+	return lexer.result, nil
 }
 
 func log(base, arg float64) float64 {
@@ -37,7 +38,8 @@ func exp(x float64) float64 {
 // Lexer is a math expressions (plus variables) tokenizer.
 type calcLexer struct {
 	program string
-	ts, te  int // current token is program[ts:te]
+	ts, te  int     // current token is program[ts:te]
+	result  float64 // storage for the interpreter's result
 }
 
 // NewLexer returns a new lexer for the given program.

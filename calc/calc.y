@@ -27,8 +27,8 @@ import (
 
 %%
 
-prog : expr { result = $1 }
-     | prog ';' expr { result = $3 }
+prog : expr { yylex.(*calcLexer).result = $1 }
+     | prog ';' expr { yylex.(*calcLexer).result = $3 }
 
 expr : NUMBER { $$ = $1 }
      | expr '+' expr { $$ = $1 + $3 }
