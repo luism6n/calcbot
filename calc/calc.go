@@ -26,6 +26,10 @@ func log(base, arg float64) float64 {
 	return math.Log(arg) / math.Log(base)
 }
 
+func pow(base, exp float64) float64 {
+	return math.Pow(base, exp)
+}
+
 // Lexer is a math expressions (plus variables) tokenizer.
 type calcLexer struct {
 	program string

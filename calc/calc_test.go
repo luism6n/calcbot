@@ -26,6 +26,7 @@ func TestInterpreter(t *testing.T) {
 			{"log2(2)", math.Log2(2)},
 			{"log2(4)", math.Log2(4)},
 			{"ln(4)", math.Log(4)},
+			{"pow(2, 5)", 32.0},
 		}
 
 		for _, c := range testCases {

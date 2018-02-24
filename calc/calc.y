@@ -39,6 +39,7 @@ expr : NUMBER { $$ = $1 }
      | LOG10 '(' expr ')' { $$ = log(10, $3) }
      | LOG2 '(' expr ')' { $$ = log(2, $3) }
      | LN '(' expr ')' { $$ = log(math.E, $3) }
+     | POW '(' expr ',' expr ')' { $$ = pow($3, $5) }
      | IDENTIFIER
      ;
 
