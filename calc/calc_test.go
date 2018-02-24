@@ -28,6 +28,8 @@ func TestInterpreter(t *testing.T) {
 			{"ln(4)", math.Log(4)},
 			{"pow(2, 5)", 32.0},
 			{"exp(5)", math.Exp(5)},
+			{"a=2; a + 1", 3.0},
+			{"τὰφυσικά = 100; log10(τὰφυσικά)", 2.0},
 		}
 
 		for _, c := range testCases {

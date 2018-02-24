@@ -38,8 +38,9 @@ func exp(x float64) float64 {
 // Lexer is a math expressions (plus variables) tokenizer.
 type calcLexer struct {
 	program string
-	ts, te  int     // current token is program[ts:te]
-	result  float64 // storage for the interpreter's result
+	ts, te  int                // current token is program[ts:te]
+	result  float64            // storage for the interpreter's result
+	symTab  map[string]float64 // symbol table
 }
 
 // NewLexer returns a new lexer for the given program.
@@ -48,6 +49,7 @@ func newCalcLexer(program string) *calcLexer {
 		program: program,
 		ts:      -1, // current token's start
 		te:      0,  // and end positions
+		symTab:  make(map[string]float64),
 	}
 }
 

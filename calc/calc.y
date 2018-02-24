@@ -14,7 +14,7 @@ import (
 %type <val> expr
 
 %token <val> NUMBER
-%token <val> IDENTIFIER
+%token <name> IDENTIFIER
 %token LOG
 %token LOG10
 %token LOG2
@@ -24,6 +24,7 @@ import (
 
 %left '+' '-'
 %left '*' '/'
+%right '='
 
 %%
 
@@ -42,7 +43,8 @@ expr : NUMBER { $$ = $1 }
      | LN '(' expr ')' { $$ = log(math.E, $3) }
      | POW '(' expr ',' expr ')' { $$ = pow($3, $5) }
      | EXP '(' expr ')' { $$ = exp($3) }
-     | IDENTIFIER
+     | IDENTIFIER { $$ = yylex.(*calcLexer).symTab[$1] }
+     | IDENTIFIER '=' expr { yylex.(*calcLexer).symTab[$1] = $3; $$ = $3 }
      ;
 
 %%
