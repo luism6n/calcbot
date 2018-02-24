@@ -23,6 +23,7 @@ const LOG2 = 57350
 const LN = 57351
 const POW = 57352
 const EXP = 57353
+const UMINUS = 57354
 
 var yyToknames = [...]string{
 	"$end",
@@ -41,6 +42,7 @@ var yyToknames = [...]string{
 	"'*'",
 	"'/'",
 	"'='",
+	"UMINUS",
 	"';'",
 	"'('",
 	"')'",
@@ -52,7 +54,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line calc.y:50
+//line calc.y:52
 //line yacctab:1
 var yyExca = [...]int{
 	-1, 1,
@@ -62,58 +64,59 @@ var yyExca = [...]int{
 
 const yyPrivate = 57344
 
-const yyLast = 100
+const yyLast = 102
 
 var yyAct = [...]int{
 
-	2, 13, 14, 15, 16, 17, 23, 24, 22, 42,
-	21, 20, 19, 25, 26, 27, 28, 29, 18, 31,
-	32, 33, 34, 35, 36, 37, 3, 11, 5, 6,
-	7, 8, 9, 10, 12, 13, 14, 15, 16, 44,
-	4, 1, 47, 45, 13, 14, 15, 16, 13, 14,
-	15, 16, 38, 15, 16, 46, 13, 14, 15, 16,
-	0, 0, 0, 43, 13, 14, 15, 16, 0, 0,
-	0, 41, 13, 14, 15, 16, 0, 0, 0, 40,
-	13, 14, 15, 16, 0, 0, 0, 39, 13, 14,
-	15, 16, 0, 0, 0, 30, 13, 14, 15, 16,
+	2, 14, 15, 16, 17, 18, 19, 25, 1, 24,
+	44, 23, 22, 21, 27, 28, 29, 30, 31, 20,
+	13, 33, 34, 35, 36, 37, 38, 39, 3, 12,
+	6, 7, 8, 9, 10, 11, 26, 4, 0, 16,
+	17, 46, 0, 5, 0, 47, 14, 15, 16, 17,
+	14, 15, 16, 17, 0, 40, 0, 0, 49, 14,
+	15, 16, 17, 14, 15, 16, 17, 48, 0, 0,
+	0, 45, 14, 15, 16, 17, 14, 15, 16, 17,
+	43, 0, 0, 0, 42, 14, 15, 16, 17, 14,
+	15, 16, 17, 41, 0, 0, 0, 32, 14, 15,
+	16, 17,
 }
 var yyPact = [...]int{
 
-	22, 17, 84, -1000, 22, 0, -6, -7, -8, -10,
-	-12, -9, 22, 22, 22, 22, 22, 76, 22, 22,
-	22, 22, 22, 22, 22, 84, 39, 39, -1000, -1000,
-	-1000, 32, 68, 60, 52, -11, 44, -1000, 22, -1000,
-	-1000, -1000, 22, -1000, 36, 23, -1000, -1000,
+	24, 2, 86, -1000, 24, 24, 0, -6, -7, -8,
+	-10, -12, 20, 24, 24, 24, 24, 24, -1000, 77,
+	24, 24, 24, 24, 24, 24, 24, 86, 25, 25,
+	-1000, -1000, -1000, 34, 73, 64, 60, -11, 51, -1000,
+	24, -1000, -1000, -1000, 24, -1000, 47, 38, -1000, -1000,
 }
 var yyPgo = [...]int{
 
-	0, 0, 41,
+	0, 0, 8,
 }
 var yyR1 = [...]int{
 
 	0, 2, 2, 1, 1, 1, 1, 1, 1, 1,
-	1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 1, 1,
 }
 var yyR2 = [...]int{
 
-	0, 1, 3, 1, 3, 3, 3, 3, 3, 6,
-	4, 4, 4, 6, 4, 1, 3,
+	0, 1, 3, 1, 2, 3, 3, 3, 3, 3,
+	6, 4, 4, 4, 6, 4, 1, 3,
 }
 var yyChk = [...]int{
 
-	-1000, -2, -1, 4, 18, 6, 7, 8, 9, 10,
-	11, 5, 17, 12, 13, 14, 15, -1, 18, 18,
-	18, 18, 18, 18, 16, -1, -1, -1, -1, -1,
-	19, -1, -1, -1, -1, -1, -1, -1, 20, 19,
-	19, 19, 20, 19, -1, -1, 19, 19,
+	-1000, -2, -1, 4, 13, 19, 6, 7, 8, 9,
+	10, 11, 5, 18, 12, 13, 14, 15, -1, -1,
+	19, 19, 19, 19, 19, 19, 16, -1, -1, -1,
+	-1, -1, 20, -1, -1, -1, -1, -1, -1, -1,
+	21, 20, 20, 20, 21, 20, -1, -1, 20, 20,
 }
 var yyDef = [...]int{
 
 	0, -2, 1, 3, 0, 0, 0, 0, 0, 0,
-	0, 15, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 2, 4, 5, 6, 7,
-	8, 0, 0, 0, 0, 0, 0, 16, 0, 10,
-	11, 12, 0, 14, 0, 0, 9, 13,
+	0, 0, 16, 0, 0, 0, 0, 0, 4, 0,
+	0, 0, 0, 0, 0, 0, 0, 2, 5, 6,
+	7, 8, 9, 0, 0, 0, 0, 0, 0, 17,
+	0, 11, 12, 13, 0, 15, 0, 0, 10, 14,
 }
 var yyTok1 = [...]int{
 
@@ -121,13 +124,14 @@ var yyTok1 = [...]int{
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	18, 19, 14, 12, 20, 13, 3, 15, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 17,
+	19, 20, 14, 12, 21, 13, 3, 15, 3, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 18,
 	3, 16,
 }
 var yyTok2 = [...]int{
 
 	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	17,
 }
 var yyTok3 = [...]int{
 	0,
@@ -472,97 +476,103 @@ yydefault:
 
 	case 1:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line calc.y:31
+		//line calc.y:32
 		{
 			yylex.(*calcLexer).result = yyDollar[1].val
 		}
 	case 2:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line calc.y:32
+		//line calc.y:33
 		{
 			yylex.(*calcLexer).result = yyDollar[3].val
 		}
 	case 3:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line calc.y:34
+		//line calc.y:35
 		{
 			yyVAL.val = yyDollar[1].val
 		}
 	case 4:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line calc.y:35
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line calc.y:36
 		{
-			yyVAL.val = yyDollar[1].val + yyDollar[3].val
+			yyVAL.val = -yyDollar[2].val
 		}
 	case 5:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line calc.y:36
+		//line calc.y:37
 		{
-			yyVAL.val = yyDollar[1].val - yyDollar[3].val
+			yyVAL.val = yyDollar[1].val + yyDollar[3].val
 		}
 	case 6:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line calc.y:37
+		//line calc.y:38
 		{
-			yyVAL.val = yyDollar[1].val * yyDollar[3].val
+			yyVAL.val = yyDollar[1].val - yyDollar[3].val
 		}
 	case 7:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line calc.y:38
+		//line calc.y:39
 		{
-			yyVAL.val = yyDollar[1].val / yyDollar[3].val
+			yyVAL.val = yyDollar[1].val * yyDollar[3].val
 		}
 	case 8:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line calc.y:39
+		//line calc.y:40
+		{
+			yyVAL.val = yyDollar[1].val / yyDollar[3].val
+		}
+	case 9:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line calc.y:41
 		{
 			yyVAL.val = yyDollar[2].val
 		}
-	case 9:
+	case 10:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line calc.y:40
+		//line calc.y:42
 		{
 			yyVAL.val = log(yyDollar[3].val, yyDollar[5].val)
 		}
-	case 10:
-		yyDollar = yyS[yypt-4 : yypt+1]
-		//line calc.y:41
-		{
-			yyVAL.val = log(10, yyDollar[3].val)
-		}
 	case 11:
-		yyDollar = yyS[yypt-4 : yypt+1]
-		//line calc.y:42
-		{
-			yyVAL.val = log(2, yyDollar[3].val)
-		}
-	case 12:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line calc.y:43
 		{
-			yyVAL.val = log(math.E, yyDollar[3].val)
+			yyVAL.val = log(10, yyDollar[3].val)
 		}
-	case 13:
-		yyDollar = yyS[yypt-6 : yypt+1]
+	case 12:
+		yyDollar = yyS[yypt-4 : yypt+1]
 		//line calc.y:44
 		{
-			yyVAL.val = pow(yyDollar[3].val, yyDollar[5].val)
+			yyVAL.val = log(2, yyDollar[3].val)
 		}
-	case 14:
+	case 13:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line calc.y:45
 		{
-			yyVAL.val = exp(yyDollar[3].val)
+			yyVAL.val = log(math.E, yyDollar[3].val)
+		}
+	case 14:
+		yyDollar = yyS[yypt-6 : yypt+1]
+		//line calc.y:46
+		{
+			yyVAL.val = pow(yyDollar[3].val, yyDollar[5].val)
 		}
 	case 15:
+		yyDollar = yyS[yypt-4 : yypt+1]
+		//line calc.y:47
+		{
+			yyVAL.val = exp(yyDollar[3].val)
+		}
+	case 16:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line calc.y:46
+		//line calc.y:48
 		{
 			yyVAL.val = yylex.(*calcLexer).symTab[yyDollar[1].name]
 		}
-	case 16:
+	case 17:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line calc.y:47
+		//line calc.y:49
 		{
 			yylex.(*calcLexer).symTab[yyDollar[1].name] = yyDollar[3].val
 			yyVAL.val = yyDollar[3].val

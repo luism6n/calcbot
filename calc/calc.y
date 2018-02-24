@@ -25,6 +25,7 @@ import (
 %left '+' '-'
 %left '*' '/'
 %right '='
+%left UMINUS
 
 %%
 
@@ -32,6 +33,7 @@ prog : expr { yylex.(*calcLexer).result = $1 }
      | prog ';' expr { yylex.(*calcLexer).result = $3 }
 
 expr : NUMBER { $$ = $1 }
+     | '-' expr %prec UMINUS { $$ = -$2 }
      | expr '+' expr { $$ = $1 + $3 }
      | expr '-' expr { $$ = $1 - $3 }
      | expr '*' expr { $$ = $1 * $3 }
