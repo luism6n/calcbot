@@ -1,5 +1,9 @@
 %{
 package calc
+
+import (
+    "math"
+)
 %}
 
 %union{
@@ -14,6 +18,7 @@ package calc
 %token LOG
 %token LOG10
 %token LOG2
+%token LN
 %token POW
 
 %left '+' '-'
@@ -33,6 +38,7 @@ expr : NUMBER { $$ = $1 }
      | LOG '(' expr ',' expr ')' { $$ = log($3, $5) }
      | LOG10 '(' expr ')' { $$ = log(10, $3) }
      | LOG2 '(' expr ')' { $$ = log(2, $3) }
+     | LN '(' expr ')' { $$ = log(math.E, $3) }
      | IDENTIFIER
      ;
 
