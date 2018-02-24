@@ -30,6 +30,10 @@ func pow(base, exp float64) float64 {
 	return math.Pow(base, exp)
 }
 
+func exp(x float64) float64 {
+	return math.Exp(x)
+}
+
 // Lexer is a math expressions (plus variables) tokenizer.
 type calcLexer struct {
 	program string
@@ -57,6 +61,7 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 	reLog10 := regexp.MustCompile(`log10`)
 	reLog2 := regexp.MustCompile(`log2`)
 	reLog := regexp.MustCompile(`log`)
+	reExp := regexp.MustCompile(`exp`)
 	rePow := regexp.MustCompile(`pow`)
 	reOp := regexp.MustCompile(`[;=,()+/*-]`)
 	reIdent := regexp.MustCompile(`\pL(\pL|[0-9_])*`)
@@ -78,6 +83,8 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 		return LOG10
 	case l.matchAndAdvance(reLog):
 		return LOG
+	case l.matchAndAdvance(reExp):
+		return EXP
 	case l.matchAndAdvance(rePow):
 		return POW
 	case l.matchAndAdvance(reOp):

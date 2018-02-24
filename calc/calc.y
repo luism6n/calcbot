@@ -20,6 +20,7 @@ import (
 %token LOG2
 %token LN
 %token POW
+%token EXP
 
 %left '+' '-'
 %left '*' '/'
@@ -40,6 +41,7 @@ expr : NUMBER { $$ = $1 }
      | LOG2 '(' expr ')' { $$ = log(2, $3) }
      | LN '(' expr ')' { $$ = log(math.E, $3) }
      | POW '(' expr ',' expr ')' { $$ = pow($3, $5) }
+     | EXP '(' expr ')' { $$ = exp($3) }
      | IDENTIFIER
      ;
 
