@@ -13,6 +13,7 @@ package calc
 %token <val> IDENTIFIER
 %token LOG
 %token LOG10
+%token LOG2
 %token POW
 
 %left '+' '-'
@@ -31,6 +32,7 @@ expr : NUMBER { $$ = $1 }
      | '(' expr ')' { $$ = $2 }
      | LOG '(' expr ',' expr ')' { $$ = log($3, $5) }
      | LOG10 '(' expr ')' { $$ = log(10, $3) }
+     | LOG2 '(' expr ')' { $$ = log(2, $3) }
      | IDENTIFIER
      ;
 

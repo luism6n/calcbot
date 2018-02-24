@@ -50,6 +50,7 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 	}
 
 	reLog10 := regexp.MustCompile(`log10`)
+	reLog2 := regexp.MustCompile(`log2`)
 	reLog := regexp.MustCompile(`log`)
 	rePow := regexp.MustCompile(`pow`)
 	reOp := regexp.MustCompile(`[;=,()+/*-]`)
@@ -64,6 +65,8 @@ func (l *calcLexer) Lex(lval *yySymType) int {
 	reNumber := regexp.MustCompile(`[0-9]+\.([0-9]+)?([eE][+-]?[0-9]+)?|[0-9]+([eE][+-]?[0-9]+)|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+`)
 
 	switch {
+	case l.matchAndAdvance(reLog2):
+		return LOG2
 	case l.matchAndAdvance(reLog10):
 		return LOG10
 	case l.matchAndAdvance(reLog):
