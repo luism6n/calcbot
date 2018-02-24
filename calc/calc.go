@@ -4,7 +4,7 @@ package calc
 import (
 	"errors"
 	"fmt"
-	"log"
+	"math"
 	"regexp"
 	"strconv"
 	"unicode"
@@ -20,6 +20,10 @@ func Evaluate(program string) (float64, error) {
 	}
 
 	return result, nil
+}
+
+func log(base, arg float64) float64 {
+	return math.Log(arg) / math.Log(base)
 }
 
 // Lexer is a math expressions (plus variables) tokenizer.
@@ -128,5 +132,5 @@ func (l *calcLexer) currentToken() string {
 
 // Error is called when something is wrong in the Lexer's program.
 func (l *calcLexer) Error(s string) {
-	log.Printf("Syntax error: %s\n", s)
+	fmt.Printf("Syntax error: %s\n", s)
 }

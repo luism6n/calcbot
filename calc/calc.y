@@ -28,6 +28,7 @@ expr : NUMBER { $$ = $1 }
      | expr '*' expr { $$ = $1 * $3 }
      | expr '/' expr { $$ = $1 / $3 }
      | '(' expr ')' { $$ = $2 }
+     | LOG '(' expr ',' expr ')' { $$ = log($3, $5) }
      | IDENTIFIER
      ;
 
